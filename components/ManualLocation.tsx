@@ -1,8 +1,8 @@
 import { View } from "@/components/Themed";
 import { useFetchLocation } from "@/hooks/useFetchLocation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import {
-  Alert,
   FlatList,
   Image,
   Modal,
@@ -14,6 +14,7 @@ import {
 import { Button, Divider, Text, TextInput } from "react-native-paper";
 
 export default function ManualLocation() {
+  const router = useRouter();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
 
@@ -48,23 +49,13 @@ export default function ManualLocation() {
 
   const handleSearch = () => {
     if (!selectedCity || !selectedCountry) return;
-    Alert.alert(
-      "Location Confirmed",
-      `Country: ${selectedCountry.name.common}\nCity: ${selectedCity}`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Get Weather",
-          onPress: () => {
-            console.log("Get weather for:", {
-              city: selectedCity,
-              country: selectedCountry.name.common,
-            });
-            // TODO: fetch weather by city + country
-          },
-        },
-      ],
-    );
+    router.push({
+      pathname: "/weather" as any,
+      params: {
+        city: selectedCity,
+        country: selectedCountry.name.common,
+      },
+    });
   };
 
   console.log("Render ManualLocation - selectedCountry:", selectedCountry);
@@ -73,7 +64,7 @@ export default function ManualLocation() {
       <MaterialCommunityIcons
         name="map-search"
         size={64}
-        color="#6200ee"
+        color="#4FC3F7"
         style={styles.icon}
       />
       <Text variant="headlineSmall" style={styles.title}>

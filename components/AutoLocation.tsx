@@ -2,14 +2,16 @@ import CloudShape from "@/components/CloudShape";
 import LocationInfo from "@/components/info";
 import LocationMap from "@/components/maps";
 import { View } from "@/components/Themed";
-import styles from "@/feature/Location/styles";
+import styles from "@/features/Location/styles";
 import { getLocation } from "@/hooks/useAnimation";
 import { useAutoLocation } from "@/hooks/useAutoLocation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { Animated, View as RNView } from "react-native";
 import { ActivityIndicator, Button, Text } from "react-native-paper";
 
 export default function AutoLocation() {
+  const router = useRouter();
   const { sun, cloud1, cloud2, cloud3 } = getLocation();
   const {
     coords,
@@ -99,7 +101,7 @@ export default function AutoLocation() {
           <MaterialCommunityIcons
             name="map-marker-off"
             size={60}
-            color="#e53935"
+            color="#EF5350"
             style={styles.icon}
           />
           <Text variant="headlineSmall" style={styles.title}>
@@ -123,7 +125,7 @@ export default function AutoLocation() {
           <MaterialCommunityIcons
             name="alert-circle-outline"
             size={60}
-            color="#e53935"
+            color="#EF5350"
             style={styles.icon}
           />
           <Text variant="headlineSmall" style={styles.title}>
@@ -147,7 +149,7 @@ export default function AutoLocation() {
           <MaterialCommunityIcons
             name="map-marker-check"
             size={60}
-            color="#43a047"
+            color="#43A047"
             style={styles.icon}
           />
           <Text variant="headlineMedium" style={styles.title}>
@@ -162,7 +164,15 @@ export default function AutoLocation() {
             mode="contained"
             style={styles.button}
             icon="weather-partly-cloudy"
-            onPress={() => console.log("Get weather info")}
+            onPress={() =>
+              router.push({
+                pathname: "/weather" as any,
+                params: {
+                  latitude: coords.latitude,
+                  longitude: coords.longitude,
+                },
+              })
+            }
           >
             Get Weather Information
           </Button>
