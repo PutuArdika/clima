@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    backgroundColor: "#87CEEB",
+    backgroundColor: "#0D2B4E",
     borderRadius: 20,
     overflow: "hidden",
   },
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   coordsBox: {
     marginTop: 16,
     padding: 20,
-    backgroundColor: "#E3F2FD",
+    backgroundColor: "#152A4A",
     borderRadius: 16,
     width: "100%",
     alignItems: "center",

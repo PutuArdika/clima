@@ -27,7 +27,7 @@ export default function HomeScreen() {
       <MaterialCommunityIcons
         name="weather-cloudy"
         size={100}
-        color="#6200ee"
+        color="#4FC3F7"
       />
       <Text variant="headlineMedium" style={styles.title}>
         Clima Weather App
