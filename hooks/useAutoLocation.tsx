@@ -14,6 +14,8 @@ export function useAutoLocation() {
     setLoading(true);
     setError(null);
     setPermissionDenied(false);
+    setCoords(null);
+    setGeoInfo(null);
 
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -23,43 +25,33 @@ export function useAutoLocation() {
     }
 
     try {
-      const result = await Promise.race([
-        new Promise<Location.LocationObject>((resolve, reject) => {
-          Location.getLastKnownPositionAsync({})
-            .then((last) => {
-              if (last) {
-                resolve(last);
-              } else {
-                Location.getCurrentPositionAsync({
-                  accuracy: Location.Accuracy.Low,
-                })
-                  .then(resolve)
-                  .catch(reject);
-              }
-            })
-            .catch(() => {
-              Location.getCurrentPositionAsync({
-                accuracy: Location.Accuracy.Low,
-              })
-                .then(resolve)
-                .catch(reject);
-            });
-        }),
-        new Promise<never>((_, reject) =>
-          setTimeout(
-            () =>
-              reject(
-                new Error(
-                  "Location request timed out. Make sure your device/emulator has location enabled.",
-                ),
-              ),
-            15000,
-          ),
-        ),
-      ]);
+      let result: Location.LocationObject | null = null;
 
-      const latitude = result.coords.latitude;
-      const longitude = result.coords.longitude;
+      // 1. Try last known position first (instant, no GPS needed)
+      try {
+        result = await Location.getLastKnownPositionAsync({});
+      } catch {
+        result = null;
+      }
+
+      // 2. If no cached position, try getCurrentPosition with increasing accuracy
+      if (!result) {
+        try {
+          result = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.Balanced,
+            timeInterval: 10000,
+          });
+        } catch {
+          // 3. Last resort: Low accuracy with longer timeout
+          result = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.Low,
+            timeInterval: 15000,
+          });
+        }
+      }
+
+      const latitude = result!.coords.latitude;
+      const longitude = result!.coords.longitude;
       setCoords({ latitude, longitude });
 
       setGeocoding(true);

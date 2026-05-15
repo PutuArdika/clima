@@ -1,17 +1,47 @@
+import Colors from "@/constants/Colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import { Theme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { PaperProvider } from "react-native-paper";
+import { MD3DarkTheme, PaperProvider } from "react-native-paper";
 import "react-native-reanimated";
 
-import { useColorScheme } from "@/components/useColorScheme";
+const NavDarkBlueTheme: Theme = {
+  dark: true,
+  colors: {
+    primary: Colors.accent,
+    background: Colors.navy,
+    card: Colors.surface,
+    text: Colors.textPrimary,
+    border: Colors.surfaceLight,
+    notification: Colors.accent,
+  },
+  fonts: {
+    regular: { fontFamily: "System", fontWeight: "400" },
+    medium: { fontFamily: "System", fontWeight: "500" },
+    bold: { fontFamily: "System", fontWeight: "700" },
+    heavy: { fontFamily: "System", fontWeight: "900" },
+  },
+};
+
+const PaperDarkBlueTheme = {
+  ...MD3DarkTheme,
+  colors: {
+    ...MD3DarkTheme.colors,
+    primary: Colors.accent,
+    onPrimary: Colors.navy,
+    primaryContainer: Colors.surfaceLight,
+    secondary: Colors.accentDark,
+    background: Colors.navy,
+    surface: Colors.surface,
+    surfaceVariant: Colors.surfaceLight,
+    onSurface: Colors.textPrimary,
+    onSurfaceVariant: Colors.textSecondary,
+    outline: Colors.surfaceLight,
+  },
+};
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,8 +75,8 @@ export default function RootLayout() {
 
   if (error) {
     return (
-      <PaperProvider>
-        <ThemeProvider value={DefaultTheme}>
+      <PaperProvider theme={PaperDarkBlueTheme}>
+        <ThemeProvider value={NavDarkBlueTheme}>
           <Stack>
             <Stack.Screen name="index" options={{ title: "Error" }} />
           </Stack>
@@ -63,14 +93,23 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <PaperProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <PaperProvider theme={PaperDarkBlueTheme}>
+      <ThemeProvider value={NavDarkBlueTheme}>
         <Stack>
           <Stack.Screen name="index" options={{ title: "Home" }} />
           <Stack.Screen name="location" options={{ title: "Location" }} />
+          <Stack.Screen
+            name="weather"
+            options={{
+              title: "Weather",
+              headerTransparent: true,
+              headerShadowVisible: false,
+              headerStyle: {
+                backgroundColor: "transparent",
+              },
+            }}
+          />
         </Stack>
       </ThemeProvider>
     </PaperProvider>
