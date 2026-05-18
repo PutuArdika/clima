@@ -110,6 +110,7 @@ function RootLayoutNav() {
               },
             }}
           />
+          <Stack.Screen name="about" options={{ title: "About" }} />
         </Stack>
       </ThemeProvider>
     </PaperProvider>
