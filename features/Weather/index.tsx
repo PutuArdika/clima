@@ -1,6 +1,7 @@
 import { useWeather } from "@/hooks/useWeather";
+import { useWeatherSound } from "@/hooks/useWeatherSound";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
 import {
   Animated,
@@ -58,6 +59,8 @@ export default function WeatherScreen() {
   };
 
   const { weather, loading, error, refetch } = useWeather(query);
+
+  useWeatherSound(weather?.condition);
 
   const isDay = weather?.isDay ?? true;
   const bg = isDay ? DAY_BG : NIGHT_BG;
@@ -120,6 +123,7 @@ export default function WeatherScreen() {
             leadingIcon="information-outline"
             onPress={() => {
               setMenuVisible(false);
+              router.push("/about");
             }}
             title="About"
           />
