@@ -1,4 +1,7 @@
-import Colors from "@/constants/Colors";
+import AppHeaderMenu from "@/app/components/AppHeaderMenu";
+import Colors from "@/app/constants/Colors";
+import { SettingsProvider } from "@/app/context/SettingsContext";
+import { ThemeConfigProvider } from "@/app/context/ThemeContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -94,25 +97,58 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <PaperProvider theme={PaperDarkBlueTheme}>
-      <ThemeProvider value={NavDarkBlueTheme}>
-        <Stack>
-          <Stack.Screen name="index" options={{ title: "Home" }} />
-          <Stack.Screen name="location" options={{ title: "Location" }} />
-          <Stack.Screen
-            name="weather"
-            options={{
-              title: "Weather",
-              headerTransparent: true,
-              headerShadowVisible: false,
-              headerStyle: {
-                backgroundColor: "transparent",
-              },
-            }}
-          />
-          <Stack.Screen name="about" options={{ title: "About" }} />
-        </Stack>
-      </ThemeProvider>
-    </PaperProvider>
+    <ThemeConfigProvider>
+      <SettingsProvider>
+        <PaperProvider theme={PaperDarkBlueTheme}>
+          <ThemeProvider value={NavDarkBlueTheme}>
+            <Stack>
+              <Stack.Screen
+                name="index"
+                options={{
+                  title: "Home",
+                  headerRight: () => <AppHeaderMenu />,
+                }}
+              />
+              <Stack.Screen
+                name="location"
+                options={{
+                  title: "Location",
+                  headerRight: () => <AppHeaderMenu />,
+                }}
+              />
+              <Stack.Screen
+                name="weather"
+                options={{
+                  title: "Weather",
+                  headerTransparent: true,
+                  headerShadowVisible: false,
+                  headerStyle: {
+                    backgroundColor: "transparent",
+                  },
+                }}
+              />
+              <Stack.Screen
+                name="about"
+                options={{
+                  title: "About",
+                  headerRight: () => <AppHeaderMenu />,
+                }}
+              />
+              <Stack.Screen
+                name="settings"
+                options={{
+                  title: "Settings",
+                  headerRight: () => <AppHeaderMenu />,
+                }}
+              />
+              <Stack.Screen
+                name="configuration"
+                options={{ title: "Configuration" }}
+              />
+            </Stack>
+          </ThemeProvider>
+        </PaperProvider>
+      </SettingsProvider>
+    </ThemeConfigProvider>
   );
 }
