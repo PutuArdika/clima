@@ -1,3 +1,3 @@
-import AboutScreen from "@/features/About";
+import AboutScreen from "@/app/features/About";
 
 export default AboutScreen;

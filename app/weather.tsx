@@ -1,1 +1,1 @@
-export { default } from "@/features/Weather";
+export { default } from "@/app/features/Weather";
