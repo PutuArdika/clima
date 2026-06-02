@@ -7,7 +7,6 @@
     "icon": "./assets/images/splash-icon.png",
     "scheme": "clima",
     "userInterfaceStyle": "automatic",
-
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.putuaa.clima"
@@ -26,7 +25,8 @@
         "FOREGROUND_SERVICE",
         "FOREGROUND_SERVICE_LOCATION"
       ],
-      "package": "com.putuaa.clima"
+      "package": "com.putuaa.clima",
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro",
@@ -57,6 +57,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "01c8f062-d96a-477d-9546-9cee42e12df1"
+      }
     }
   }
 }
