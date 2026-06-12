@@ -1,6 +1,8 @@
 export type Country = {
-  name: { common: string };
-  flags: { png: string };
+  name: string;
+  flag: string;
+  iso2: string;
+  iso3: string;
 };
 
 export type Coords = {

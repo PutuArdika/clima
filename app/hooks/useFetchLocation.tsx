@@ -24,17 +24,37 @@ export function useFetchLocation() {
   const fetchCountries = () => {
     setLoadingCountries(true);
     setCountriesError(false);
-    fetch("https://restcountries.com/v3.1/all?fields=name,flags")
-      .then((res) => res.json())
-      .then((data: Country[]) => {
-        const sorted = data.sort((a, b) =>
-          a.name.common.localeCompare(b.name.common),
+    fetch("https://countriesnow.space/api/v0.1/countries/flag/images", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((response) => {
+        if (response.error) {
+          throw new Error(response.msg);
+        }
+        const data: Country[] = response.data.map(
+          (item: { name: string; iso2: string; iso3: string }) => ({
+            name: item.name,
+            // Use flagcdn.com for PNG flags (React Native Image doesn't support SVG)
+            flag: `https://flagcdn.com/w80/${item.iso2.toLowerCase()}.png`,
+            iso2: item.iso2,
+            iso3: item.iso3,
+          }),
         );
+        const sorted = data.sort((a, b) => a.name.localeCompare(b.name));
         setCountries(sorted);
         setFilteredCountries(sorted);
       })
       .catch((e: unknown) => {
-        void e;
+        console.error("Failed to fetch countries:", e);
         setCountriesError(true);
       })
       .finally(() => setLoadingCountries(false));
@@ -45,10 +65,19 @@ export function useFetchLocation() {
     setCitiesError(false);
     fetch("https://countriesnow.space/api/v0.1/countries/cities", {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: JSON.stringify({ country: countryName }),
+      redirect: "follow",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         if (data.error) throw new Error(data.msg);
         const sorted: string[] = (data.data as string[]).sort((a, b) =>
@@ -58,7 +87,7 @@ export function useFetchLocation() {
         setFilteredCities(sorted);
       })
       .catch((e: unknown) => {
-        void e;
+        console.error("Failed to fetch cities:", e);
         setCitiesError(true);
       })
       .finally(() => setLoadingCities(false));
@@ -72,7 +101,7 @@ export function useFetchLocation() {
     setCountrySearch(text);
     setFilteredCountries(
       countries.filter((c) =>
-        c.name.common.toLowerCase().includes(text.toLowerCase()),
+        c.name.toLowerCase().includes(text.toLowerCase()),
       ),
     );
   };
@@ -85,7 +114,7 @@ export function useFetchLocation() {
     setCountrySearch("");
     setDropdownVisible(false);
     Keyboard.dismiss();
-    fetchCities(country.name.common);
+    fetchCities(country.name);
   };
 
   const handleCitySearch = (text: string) => {
@@ -103,7 +132,7 @@ export function useFetchLocation() {
   };
 
   const retryCities = () => {
-    if (selectedCountry) fetchCities(selectedCountry.name.common);
+    if (selectedCountry) fetchCities(selectedCountry.name);
   };
 
   return {

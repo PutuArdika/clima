@@ -55,7 +55,7 @@ export default function ManualLocation() {
       pathname: "/weather" as any,
       params: {
         city: selectedCity,
-        country: selectedCountry.name.common,
+        country: selectedCountry.name,
       },
     });
   };
@@ -86,15 +86,12 @@ export default function ManualLocation() {
       >
         {selectedCountry ? (
           <RNView style={styles.selectedRow}>
-            <Image
-              source={{ uri: selectedCountry.flags.png }}
-              style={styles.flag}
-            />
+            <Image source={{ uri: selectedCountry.flag }} style={styles.flag} />
             <Text
               variant="bodyLarge"
               style={[styles.countryName, { color: textColor }]}
             >
-              {selectedCountry.name.common}
+              {selectedCountry.name}
             </Text>
           </RNView>
         ) : (
@@ -230,19 +227,19 @@ export default function ManualLocation() {
             <Divider style={{ backgroundColor: dividerColor }} />
             <FlatList
               data={filteredCountries}
-              keyExtractor={(item) => item.name.common}
+              keyExtractor={(item) => item.name}
               style={{ flex: 1 }}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[styles.countryItem, { backgroundColor: bgColor }]}
                   onPress={() => handleSelectCountry(item)}
                 >
-                  <Image source={{ uri: item.flags.png }} style={styles.flag} />
+                  <Image source={{ uri: item.flag }} style={styles.flag} />
                   <Text
                     variant="bodyLarge"
                     style={[styles.countryItemText, { color: textColor }]}
                   >
-                    {item.name.common}
+                    {item.name}
                   </Text>
                 </TouchableOpacity>
               )}
